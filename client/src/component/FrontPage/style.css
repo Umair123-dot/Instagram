@@ -1,0 +1,73 @@
+.main{
+  display:flex;
+  flex-direction:column;
+  /* justify-content:flex-start; */
+  align-items:flex-start ;
+  /* align-content:flex-start; */
+}
+
+.myProfile{
+  display:grid;
+  grid-template-columns: auto auto;
+  margin-top: 5%;
+  width:min-content;
+}
+.suggestion{
+  display: flex;
+  width: 100%;
+  justify-content:space-between;
+}
+.suggestionProfile{
+  
+  display:grid;
+  grid-template-columns: 40% 70%;
+  margin-top: 2%;
+}
+
+.avatar{
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  grid-area: 'avatar';
+}
+.suggestionAvatar{
+  margin-top: 2vh;
+  width: 6vh;
+  height: 7vh;
+  border-radius: 50%;
+  grid-area: 'suggestionAvatar';   
+}
+.myName{
+  flex-direction:column;
+  grid-area: 'myName';
+  width: min-content;
+  height: min-content;
+} 
+.suggestionName{
+  margin-top:3;
+  height: 3vh;
+  flex-direction:column;
+  grid-area: 'suggestionName';
+  font-size: 1.5vh;
+  width: min-content;
+  height: min-content;
+}
+.gray {
+  color:rgb(121, 117, 117)
+}
+.suggestionContainer{
+  display: flex; 
+  justify-content: space-between; 
+  width: 100%; 
+}
+
+.follow{ 
+  color: rgb(10, 132, 247); 
+  margin-top: 8%;
+  font-size: 58%;
+}
+
+.follow:hover {
+  font-weight: bold;    
+  font-size: 60%;
+}

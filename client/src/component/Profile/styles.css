@@ -1,0 +1,59 @@
+.profileAvatar{
+  width: 20vh;
+  height: 20vh;
+  border-radius: 50%;
+  margin-right:  15vh;
+}
+
+.flex{
+  display:flex;
+  justify-content:center;
+  margin-right: 15vh;
+  margin-top: 4vh;
+}
+
+.nameSection {
+  display:flex;
+  justify-content:space-between;
+  margin-top: 1vh;
+}
+
+.marginLeft{
+  margin-left: 3vh;
+}
+
+.row{
+flex-direction: row;
+}
+
+.stories {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.pictures{
+  width: 92%;
+  height: 44vh;
+  flex: 1;
+  margin: auto;
+}
+
+.allPosts{
+  display:grid;
+  grid-template-columns: auto auto auto; 
+}
+
+@media only screen and (max-width: 800px) {
+  .allPosts{
+      display:grid;
+      grid-template-columns: auto auto ; 
+  }
+}
+
+@media only screen and (max-width: 460px) {
+  .allPosts{
+      display:grid;
+      grid-template-columns: auto ; 
+  }
+}

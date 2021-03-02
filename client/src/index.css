@@ -1,0 +1,58 @@
+.container{ 
+  display: flex; 
+  justify-content: space-evenly;
+}
+
+.box{
+  display: flex; 
+  justify-content: center; 
+  flex-direction: column;
+   width: 45%; 
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1440px) {
+  .box {
+      width: 45%; 
+  }
+}
+
+
+@media only screen and (max-width: 1024px) {
+  .box {
+      width: 45%; 
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .box {
+      width: 70%; 
+  }
+}
+
+
+@media only screen and (max-width: 768px) {
+  .box {
+      width: 100%; 
+  }
+}
+
+
+@media only screen and (max-width: 550px) {
+  .box {
+      width: 100%; 
+  }
+}
+
+
+
+@media only screen and (max-width: 425px) {
+  .box {
+      width: 100%; 
+  }
+}
+
+@media only screen and  (max-width: 768px) { .hidden{
+  display:none;
+}
+}
