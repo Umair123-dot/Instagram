@@ -38,9 +38,10 @@ enum Gender{
 type Query{
   users:[User!]
   posts:[Post!]
-  comments:[Comment!]
+  comments(postId: Int!):[Comment!]
   loggedInUser: User!
   userPosts:User!
+  
 }
 type Mutation{
   

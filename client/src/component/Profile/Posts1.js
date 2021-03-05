@@ -1,4 +1,4 @@
-import React, { useState,createContext,useContext } from 'react'
+import React, { useState, createContext, useContext } from 'react'
 import { gql, useQuery } from '@apollo/client'
 
 import Grid from '@material-ui/core/Grid';
@@ -91,8 +91,31 @@ query{
     }
 }
 `
+const LOGGED_IN_USER = gql`
+    query {
+        loggedInUser {
+            id
+            name
+            avatar
+            posts {
+            id
+            picture
+            content
+            comments {
+                id
+                content
+                user {
+                id
+                name
+                avatar
+                }
+            }
+            }
+        }
+    }
+`
 
-function ViewImageDetails({ post,handleClose }) {
+function ViewImageDetails({ post, handleClose }) {
     const [like, setLike] = useState(false)
     const [emojiPicker, setEmojiPicker] = useState(false)
     const [initialText, setInitialText] = useState('');
@@ -134,7 +157,7 @@ function ViewImageDetails({ post,handleClose }) {
             <Card className={classes.root}>
                 <CardHeader
                     avatar={
-                        <img src={`/images/${post.user.avatar}`} className={classes.avatar} alt='Saad' />
+                        <img src={`/ images / ${post.user.avatar}`} className={classes.avatar} alt='Saad' />
                     }
                     action={
                         <IconButton
@@ -142,7 +165,7 @@ function ViewImageDetails({ post,handleClose }) {
                             aria-controls="long-menu"
                             aria-haspopup="true"
                         >
-                             <span onClick={handleClose}>x</span>
+                            <span onClick={handleClose}>x</span>
 
                             {/* <MoreVertIcon /> */}
                         </IconButton>
@@ -157,7 +180,7 @@ function ViewImageDetails({ post,handleClose }) {
                 />
                 <CardMedia
                     className={classes.media}
-                    image={`/images/${post.picture}`}
+                    image={`/ images / ${post.picture} `}
                 />
                 <CardContent>
                     <Typography variant="body2" color="textSecondary" component="p">{post.content}</Typography>
@@ -256,8 +279,9 @@ function ViewImageDetails({ post,handleClose }) {
 
 
 export default function Posts() {
+    console.log('Posts1 component')
 
-    const { data, loading, error } = useQuery(allUserPost, { fetchPolicy: 'no-cache' })
+    const { data, loading, error } = useQuery(LOGGED_IN_USER, { fetchPolicy: 'no-cache' })
 
     //MODAL
     const [open, setOpen] = React.useState(false);
@@ -278,17 +302,17 @@ export default function Posts() {
 
     return (
         <Grid container spacing={1} className="Posts">
-            {data.userPosts.posts.map((post, i) => {
+            {data.posts.map((post, i) => {
                 console.log(post)
                 return (
                     <Grid item key={i}>
-                        <img alt="picture" src={`/images/${post.picture}`} className="pictures" onClick={() => handleOpen(post)} />
+                        <img alt="picture" src={`/ images / ${post.picture} `} className="pictures" onClick={() => handleOpen(post)} />
                     </Grid>
                 )
             })}
             <Modal onEscapeKeyDown open={open}
                 onClose={handleClose}>
-                    <ViewImageDetails post={post} handleClose={handleClose} />
+                <ViewImageDetails post={post} handleClose={handleClose} />
             </Modal>
             {/* {Object.keys(data).map((keys,index)=> {
                 console.log(data[keys].posts)

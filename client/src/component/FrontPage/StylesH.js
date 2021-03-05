@@ -3,9 +3,10 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     grow: {
         flexGrow: 1,
+        marginTop:'-10px',
     },
     menuButton: {
-        marginRight: theme.spacing(2),
+        marginRight: theme.spacing(3),
     },
     title: {
         // display: 'none',
@@ -72,5 +73,4 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }));
-
 export default useStyles

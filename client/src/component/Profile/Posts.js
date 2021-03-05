@@ -272,7 +272,7 @@ export default function Posts() {
         setPost(null)
     };
 
-    if (loading || !data) return <h1>Loading...</h1>
+    if (loading) return <h1>Loading...</h1>
 
     // const handleCloseContext = createContext(handleClose)
 

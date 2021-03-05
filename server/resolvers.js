@@ -30,10 +30,11 @@ module.exports = {
     },
     users: () => prisma.user.findMany(),
     posts: () => prisma.post.findMany(),
-    comments: () => prisma.comment.findMany(),
+    comments: (_, { postId }) => prisma.comment.findMany({ where: { postId }}),
     loggedInUser: async (_, __, context, ___) => {
       return getUserID(context);
-    }
+    },
+    
 
   },
   Mutation: {
@@ -166,15 +167,19 @@ module.exports = {
   },
   User: {
     posts: async (root, args, context, info) => {
-
       return prisma.post.findMany({ where: { userId: root.id } })
     }
   },
   Post: {
     user: async (root, args, context, info) => {
       return prisma.user.findUnique({ where: { id: root.userId } })
+    },
+    comments:async (root,args,contetx,info)=>{
+      return prisma.comment.findMany({where:{postId:root.id}})
     }
+    
   },
+  
   Comment: {
     user: async (root, args, context, info) => {
       return prisma.user.findUnique({ where: { id: root.userId } })

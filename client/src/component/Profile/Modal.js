@@ -12,32 +12,66 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import { FaRegComment } from 'react-icons/fa';
 import Picker from 'emoji-picker-react';
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery,useMutation} from '@apollo/client'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 
-//Query for read data 
-const allUserPost = gql`
-query{
-    userPosts{
-        id
+
+const showComment = gql`
+query {
+  comments(postId:$postId) {
+    post{
+      
+      user{
         name
         avatar
-        posts{
+        
+      }
+      
+    }
+    content
+  }
+}
+
+
+`;
+
+
+//Query for read data 
+const LOGGED_IN_USER = gql`
+    query {
+        loggedInUser {
+            id
+            name
+            avatar
+            posts {
             id
             picture
             content
-            user {
+            comments {
+                id
+                content
+                user {
                 id
                 name
                 avatar
+                }
+            }
             }
         }
     }
-}
 `
+const CREATE_COMMENT=gql`
+mutation($postId:Int!,$content:String!){
+  createComment(postId:$postId,content:$content){
+     content
+    
+  }
+}
 
+
+`; 
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -108,16 +142,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CustomizedDialogs() {
   const styles = useStyles()
+  const [comments, setComments] = useState([])
   const [open, setOpen] = useState(false);
   const [like, setLike] = useState(false)
   const [emojiPicker, setEmojiPicker] = useState(false)
   const [initialText, setInitialText] = useState('');
-  const [comment, setComment] = useState([])
   const [viewAllComment, setViewAllComment] = useState(false)
   const [showDetails, setShowDetails] = useState('')
-  const name = 'Muhammad Saad Ali';
-  const { data, loading, error } = useQuery(allUserPost, { fetchPolicy: 'no-cache' })
+  const { data: loggedInUserData, loading } = useQuery(LOGGED_IN_USER);
+  const [createComment] =useMutation(CREATE_COMMENT)
 
+  console.log({ loggedInUserData })
   const onEmojiClick = (event, emojiObject) => {
     setInitialText(initialText + emojiObject.emoji);
   };
@@ -127,10 +162,11 @@ export default function CustomizedDialogs() {
   }
 
   const CommentAdded = () => {
-    setComment([...comment, { name: name, text: initialText, picture: profilePicture }])
-    setInitialText('')
-    setEmojiPicker(false)
+    // setComment([...comment, { name: name, text: initialText, picture: profilePicture }])
+    // setInitialText('')
+    // setEmojiPicker(false)
   };
+
 
   const TextChange = (e) => {
     setInitialText(e.target.value);
@@ -144,15 +180,19 @@ export default function CustomizedDialogs() {
   }
 
 
-  const handleClickOpen = (e) => {
+  const handleClickOpen = (e, comments) => {
     setOpen(true);
-    setShowDetails(e.target.src)
+    setComments(comments || []);
+    setShowDetails(e.target.src);
   };
+  console.log({ comments })
   const handleClose = () => {
     setOpen(false);
-    setShowDetails('')
+    setShowDetails('');
+    setComments([])
   };
-  if (loading || !data) return <h1>Loading...</h1>
+  if (loading || !loggedInUserData) return <h1>Loading...</h1>
+
 
   return (
     <div>
@@ -160,24 +200,23 @@ export default function CustomizedDialogs() {
       <Grid container spacing={4}>
         {/* {Array(8).fill(0).map((_, key) => <Grid item xs={4} onClick={handleClickOpen} key={key} > <img src={Kalam} alt="kalam" className={styles.pictures} /> </Grid>)} */}
         {
-          data.userPosts.posts.map((post,i)=>{
-            return(
-              <Grid item xs={4} key={i}> <img onClick={handleClickOpen} src={`/images/${post.picture}`} alt="kalam" className={styles.pictures} /> </Grid>
+          loggedInUserData.loggedInUser?.posts.map((post, i) => {
+            return (
+              <Grid item xs={4} key={i}>
+                <img onClick={(e) => handleClickOpen(e, post.comments)} src={`/images/${post.picture}`} alt="kalam" className={styles.pictures} />
+                {post.comments?.map((comment, i) => {
+
+                  console.log(comment)
+                  return <h3 key={i}>comments...</h3>
+                })}
+              </Grid>
             )
 
           })
         }
-        
-        {/* <Grid item xs={4}> <  img onClick={handleClickOpen} src={Kalam} alt="kalam" className={styles.pictures} /> </Grid>
-        <Grid item xs={4} > <img onClick={handleClickOpen} src={Car} alt="Car" className={styles.pictures} /> </Grid>
-        <Grid item xs={4} > <img onClick={handleClickOpen} src={Mahodand} alt="Mahodand" className={styles.pictures} /> </Grid>
-        <Grid item xs={4} > <img onClick={handleClickOpen} src={profilePicture} alt="profilePicture" className={styles.pictures} /> </Grid> */}
+
       </Grid>
       <Dialog maxWidth="md" fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-      
- 
-
-
         <div className={styles.main} >
           <div className={styles.paper} >
             <img alt="profile" src={showDetails} className={styles.paperPicture} />
@@ -185,31 +224,35 @@ export default function CustomizedDialogs() {
           <Card className={styles.card} >
             <CardHeader
               avatar={
-                <img src={profilePicture} className={styles.avatar} alt='Saad' />
+                <img src={`/images/${loggedInUserData.loggedInUser.avatar}`} className={styles.avatar} alt='Saad' />
               }
               title={
                 <div>
-                  <p className={styles.title}>Muhammad Saad Ali</p>
+                  <p className={styles.title}>{loggedInUserData.loggedInUser.name}</p>
                   <p className={styles.subheader}>Ferrari World</p>
                 </div>}
             // subheader={}
             />
             <div className={styles.gap}>
 
+
               {!emojiPicker && <div>
                 {!viewAllComment
-                  && comment.length > 5 ? <span onClick={ToggleViewComment} style={{ marginLeft: 20 }}>{` View all ${comment.length} comments`}</span>
+
+                  && comments.length > 5 ? <span onClick={ToggleViewComment} style={{ marginLeft: 20 }}>{` View all ${comments.length} comments`}</span>
                   : null
                 }
+
+
                 {viewAllComment && <span onClick={ToggleViewComment}>Hide Comments</span>}
-                {comment
+                {comments
                   .filter((_, i) => !viewAllComment ? i < 5 : _)
                   .map((com, ind) => (
                     <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 7 }} key={ind}>
-                      <img alt="avatar" className={styles.commentAvatar} src={com.picture} />
+                      <img alt="avatar" className={styles.commentAvatar} src={`/images/${loggedInUserData.loggedInUser.avatar}`} />
                       <div style={{ flexDirection: 'row', textAlign: 'initial' }}>
-                        <div style={{ fontSize: '60%' }}> {com.name}</div>
-                        <div style={{ fontSize: '67%' }}> {com.text}</div>
+                        <div style={{ fontSize: '60%' }}> {com.user.name}</div>
+                        <div style={{ fontSize: '67%' }}>{com.content} </div>
                       </div>
                     </div>
                   ))
@@ -220,6 +263,9 @@ export default function CustomizedDialogs() {
 
 
             </div>
+
+
+
             {!emojiPicker && <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <CardActions disableSpacing>
                 <IconButton onClick={Heart} style={like ? { color: 'red' } : { color: '' }} aria-label="add to favorites">

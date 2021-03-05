@@ -1,20 +1,24 @@
 .main{
   display:flex;
   flex-direction:column;
+
   /* justify-content:flex-start; */
   align-items:flex-start ;
   /* align-content:flex-start; */
 }
 
 .myProfile{
-  display:grid;
+  display:flex;
+  padding-left: 10px;
   grid-template-columns: auto auto;
-  margin-top: 5%;
+  margin-top: 20%;
+
   width:min-content;
 }
 .suggestion{
   display: flex;
   width: 100%;
+  margin: 20px;
   justify-content:space-between;
 }
 .suggestionProfile{

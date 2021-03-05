@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'wrap',
         margin: 'auto',
         // width: '60%',
-        width: '98%',
+        width: '100%',
 
         '& > *': {
             margin: theme.spacing(2),
@@ -51,7 +51,7 @@ function SampleNextArrow(props) {
     return (
         <div
             className={className}
-            style={{ ...style, display: "block", borderRadius: '50%', backgroundColor: '#dce0e6' }}
+            style={{ ...style, display: "block", borderRadius: '50%', backgroundColor: '#dce0e6'}}
             onClick={onClick}
         />
     );
